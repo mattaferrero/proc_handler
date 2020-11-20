@@ -19,7 +19,7 @@
  * struct has like 10 million different attributes, this can be changed later. 
  */
 
-typedef struct process_struct {
+typedef struct proc_struct {
 	int32_t pid;
 	int32_t gid;
 	int32_t uid;
@@ -80,9 +80,22 @@ int DelProcess(int pid) {
 	for (i = 0; i < MAXPROC_LIMIT; i++) {
 		if (procptr[i] != NULL && procptr[i]->pid == pid) {
 			free(procptr[i]);
-			procptr[i] == NULL;
+			procptr[i] = NULL;
 			return 0;
 		}
 	}
 	return -1;
+}
+
+/* GetProcessInfo() just returns location of existing process. Self evident. Returns NULL pointer on fail. */
+
+proc_struct *GetProcessInfo(int pid) {
+	int i;
+
+	for(i = 0; i < MAXPROC_LIMIT; i++) {
+		if (procptr[i] != NULL && procptr[i]->pid == pid) {
+			return procptr[i];
+		}
+	}
+	return NULL;
 }
