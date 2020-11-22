@@ -47,19 +47,20 @@ void ZeroProcesses(void) {
  
 int AddProcess(proc_struct *st) {
 	int i;
-	proc_struct *ptr;
+	proc_struct *ptr = NULL;
 
 	if (st == NULL) {
 		return -1;
 	}
 
-	ptr = malloc(sizeof(proc_struct));
-	*ptr = *st;
-
 	for (i = 0; i < MAXPROC_LIMIT; i++) {
 		if (procptr[i] == NULL) {
+
+			ptr = malloc(sizeof(proc_struct));
+			*ptr = *st;
 			procptr[i] = ptr;
 			return 0;
+
 		}
 	}
 
