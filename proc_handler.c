@@ -1,13 +1,5 @@
 /* Objective: to create an array of pointers to handle processes */
 
-/*
- * struct syntax to remember:
- * struct foo { ... }; declaration tells the compiler about a new type. 'struct foo' 
- * can be used to refer to that type. struct foo bar; declares 'bar' to be an object
- * of that type. typedef struct foo bar; declares 'bar' to be another name for the
- * 'struct foo' type. struct { .. } bar; just creates an object of type struct {..}.
- */
-
 #define MAXPROC_LIMIT 512
 
 #include <stdint.h>
@@ -19,19 +11,19 @@
  * struct has like 10 million different attributes, this can be changed later. 
  */
 
-typedef struct proc_struct {
+typedef struct proc {
 	int32_t pid;
 	int32_t gid;
 	int32_t uid;
-} proc_struct;
+} proc;
 
 /* Here we will create an array of pointers to each process_struct for easier handling. */
 
-proc_struct *procptr[MAXPROC_LIMIT];
+proc *procptr[MAXPROC_LIMIT];
 
 /* This code to zero out the array should be run after every reboot before ANY processes are loaded. */
 
-void ZeroProcesses(void) {
+void zero_processes(void) {
 	int i;
 
 	for (i = 0; i < MAXPROC_LIMIT; i++) {
@@ -45,9 +37,9 @@ void ZeroProcesses(void) {
  * efficiency purposes for the sake of memory management. It is expected of DelProcess() to call free().
  */
  
-int AddProcess(proc_struct *st) {
+int add_process(proc *st) {
 	int i;
-	proc_struct *ptr = NULL;
+	proc *ptr = NULL;
 
 	if (st == NULL) {
 		return -1;
@@ -56,7 +48,7 @@ int AddProcess(proc_struct *st) {
 	for (i = 0; i < MAXPROC_LIMIT; i++) {
 		if (procptr[i] == NULL) {
 
-			ptr = malloc(sizeof(proc_struct));
+			ptr = malloc(sizeof(proc));
 			*ptr = *st;
 			procptr[i] = ptr;
 			return 0;
@@ -75,7 +67,7 @@ int AddProcess(proc_struct *st) {
  * corresponding value and free()'s the location. Return 0 on Success, -1 on Failure.
  */
 
-int DelProcess(int pid) {
+int del_process(int pid) {
 	int i;
 
 	for (i = 0; i < MAXPROC_LIMIT; i++) {
@@ -88,9 +80,9 @@ int DelProcess(int pid) {
 	return -1;
 }
 
-/* GetProcessInfo() just returns location of existing process. Self evident. Returns NULL pointer on fail. */
+/* get_process_info() just returns location of existing process. Self evident. Returns NULL pointer on fail. */
 
-proc_struct *GetProcessInfo(int pid) {
+proc *get_process_info(int pid) {
 	int i;
 
 	for(i = 0; i < MAXPROC_LIMIT; i++) {
